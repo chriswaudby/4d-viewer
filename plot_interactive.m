@@ -1,6 +1,11 @@
 % run 'initalise' first
 
-contour(dH2,dC2,hmqc,logspace(6.5,8,15))
+% left-click to select a peak position
+% use up/down arrows to adjust contour levels
+% 'p' to print NOE peak positions to console window
+% 'q' to quit
+
+contour(dH2,dC2,hmqc,clev_2d)
 set(gca,'xdir','reverse');set(gca,'ydir','reverse')
 xlabel('1H chemical shift / ppm')
 ylabel('13C chemical shift / ppm')
@@ -10,8 +15,7 @@ cscale = 1;
 peaksx=[]; peaksy=[];
 
 while true
-    %contour(dH,dC,p2',logspace(7.2,11,20),'m')
-    contour(dH2,dC2,hmqc,logspace(6.5,8,15),'color',[.7 .7 .7])
+    contour(dH2,dC2,hmqc,clev_2d,'color',[.7 .7 .7])
     set(gca,'xdir','reverse');set(gca,'ydir','reverse')
     xlabel('1H chemical shift / ppm')
     ylabel('13C chemical shift / ppm')
@@ -28,14 +32,11 @@ while true
         iy = iy-1;
     end
     p=y(ix,iy,:,:);
-    p=reshape(p,[256 256]);
-    noise=std(vec(p(8:22,23:33)));
-    clev = logspace(.7,3,20)*noise*cscale;
+    p=reshape(p,[ftsize(3) ftsize(4)]);
+    clev = clev_4d * cscale;
     hold on
     contour(dHnoe,dCnoe,p',clev,'r')
     contour(dHnoe,dCnoe,p',-clev,'m')
-    %contour(dHnoe-2.4,dCnoe,p,-clev,'c')
-    %xlim([-0.9 2.2])
     plot(dH(ix),dC(iy),'kx')
 
     noe = p;
